@@ -1,0 +1,15 @@
+/.gradle/
+/bin/
+/build/
+/out/
+/**/generated-*
+# Eclipse configuration
+/.settings/
+/.classpath
+/.project
+/.externalToolBuilders/
+# IntelliJ configuration
+.idea
+# IntelliJ SonarLint plugin
+.idea/sonarlint/
+
