@@ -7,7 +7,7 @@ class SimpleParser;
 
 /* inclusion de code */
 
-action code {: 
+action code {:
     // pour utilisation dans les actions (classe action)
 :};
 
@@ -41,17 +41,27 @@ init with {:
 
 /* declarations (terminaux, non-terminaux, etc.) */
 /* symboles terminaux */
-terminal VERBE, PRONOM, ADJECTIF, POINT;
-terminal ERROR;
+terminal ENDOP, LEFTBRAC, RIGHTBRAC, PLUS, MINUS, UMINUS, MULT, DIV, MOD;
+terminal int NOMBRE;
 
 /* non terminaux */
-non terminal phrase , texte;
+non terminal calcul, suiteCalcul;
+non terminal Integer operable;
+
+precedence left PLUS, MINUS;
+precedence left MULT, DIV, MOD;
+precedence right UMINUS;
+
 
 /* grammaire */
-
-texte   ::= phrase texte 
-          | phrase ; 
-phrase  ::= PRONOM VERBE ADJECTIF {: System.out.println("OK"); :} POINT 
-          | error POINT 
-          ;
+suiteCalcul ::= calcul suiteCalcul | calcul;
+calcul ::= operable:v {: System.out.print("OK : res = "); System.out.println(v); :} ENDOP | error ENDOP;
+operable ::= operable:v1 PLUS operable:v2 {: RESULT = v1 + v2; :} |
+            operable:v1 MINUS operable:v2 {: RESULT = v1 - v2; :} |
+            MINUS operable:v2 {: RESULT = - v2; :}  %prec UMINUS|
+            operable:v1 MULT operable:v2 {: RESULT = v1 * v2; :} |
+            operable:v1 DIV operable:v2 {: RESULT = v1 / v2; :} |
+            operable:v1 MOD operable:v2 {: RESULT = v1 % v2; :} |
+            NOMBRE:v {: RESULT = v; :} |
+            LEFTBRAC operable:v RIGHTBRAC {: RESULT = v; :} ;
 
